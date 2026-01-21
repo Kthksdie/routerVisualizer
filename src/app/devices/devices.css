@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+body {
+    background-color: #1a1a1a;
+}
+
+.schematic-root {
+    --carbon-black: #1a1a1a;
+    --ink-white: #e4e4e4;
+    --dim-gray: #888888;
+    --accent-green: #00ff66;
+    --dither-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIElEQVQIW2NkYGBgYGRgYDBkYGBgZGBgYDBkYGBgYDBkAAAAMwAgpY6YqQAAAABJRU5ErkJggg==');
+}
+
+.schematic-root {
+    color: var(--ink-white);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    width: 100vw;
+}
+
+/* Schematic Layout */
+.schematic-container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* Device Row */
+.device-row {
+    display: grid;
+    grid-template-columns: .2fr 1.5fr 1fr 1fr;
+    align-items: center;
+    padding: 8px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+    animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+}
+
+/* We will handle animation delays dynamically in React */
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.row-connector {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 0px;
+    height: 1px;
+    background: var(--accent-green);
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+/* Typography & Data */
+.mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--dim-gray);
+}
+
+.data-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--ink-white);
+    margin-top: 4px;
+}
+
+.identity-name {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.signal-meter {
+    width: 100px;
+    height: 4px;
+    background: #1a1a1a;
+    margin-top: 10px;
+    position: relative;
+}
+
+.signal-fill {
+    height: 100%;
+    background: var(--ink-white);
+    transition: width 1s ease-out;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    box-shadow: 0 0 10px var(--accent-green);
+}
+
+/* Metric Cluster */
+.metric-group {
+    display: flex;
+    gap: 24px;
+}
+
+.metric-item {
+    display: flex;
+    flex-direction: column;
+}

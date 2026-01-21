@@ -21,7 +21,8 @@ export function DeviceList({ devices }: { devices: any[] }) {
 
         devices.forEach(device => {
             const ip = device.IP;
-            if (ip && ip !== '0.0.0.0' && pings[ip] === undefined && !loadingPings[ip]) {
+            // Allow re-pinging when devices list updates (i.e. on refresh)
+            if (ip && ip !== '0.0.0.0' && !loadingPings[ip]) {
                 fetchPing(ip);
             }
         });
