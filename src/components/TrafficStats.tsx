@@ -14,9 +14,9 @@ export function TrafficStats({ stats }: { stats: any }) {
                     <ArrowDown className="h-4 w-4 text-green-500" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">{stats.NewCurrentDownload || 0} Mbps</div>
+                    <div className="text-2xl font-bold">{stats.newTodayDownload || 0} Mbps</div>
                     <p className="text-xs text-muted-foreground mt-1">
-                        Total: {stats.NewTotalDownload || 0} MB
+                        Total: {stats.newMonthDownload || 0} MB
                     </p>
                 </CardContent>
             </Card>
@@ -26,9 +26,9 @@ export function TrafficStats({ stats }: { stats: any }) {
                     <ArrowUp className="h-4 w-4 text-blue-500" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">{stats.NewCurrentUpload || 0} Mbps</div>
+                    <div className="text-2xl font-bold">{stats.newTodayUpload || 0} Mbps</div>
                     <p className="text-xs text-muted-foreground mt-1">
-                        Total: {stats.NewTotalUpload || 0} MB
+                        Total: {stats.newMonthUpload || 0} MB
                     </p>
                 </CardContent>
             </Card>

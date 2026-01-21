@@ -1,6 +1,7 @@
 'use client';
 
-import { Laptop, Smartphone, Tv, Wifi } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Laptop, Smartphone, Tv, Wifi, Activity } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const getDeviceIcon = (details: any) => {
@@ -12,6 +13,38 @@ const getDeviceIcon = (details: any) => {
 };
 
 export function DeviceList({ devices }: { devices: any[] }) {
+    const [pings, setPings] = useState<Record<string, number | null>>({});
+    const [loadingPings, setLoadingPings] = useState<Record<string, boolean>>({});
+
+    useEffect(() => {
+        if (!devices) return;
+
+        devices.forEach(device => {
+            const ip = device.IP;
+            if (ip && ip !== '0.0.0.0' && pings[ip] === undefined && !loadingPings[ip]) {
+                fetchPing(ip);
+            }
+        });
+    }, [devices]);
+
+    const fetchPing = async (ip: string) => {
+        setLoadingPings(prev => ({ ...prev, [ip]: true }));
+        try {
+            const res = await fetch(`/api/router/ping?ip=${ip}`);
+            const data = await res.json();
+            if (data.success && data.online) {
+                setPings(prev => ({ ...prev, [ip]: data.latency }));
+            } else {
+                setPings(prev => ({ ...prev, [ip]: null }));
+            }
+        } catch (e) {
+            console.error(`Failed to ping ${ip}`, e);
+            setPings(prev => ({ ...prev, [ip]: null }));
+        } finally {
+            setLoadingPings(prev => ({ ...prev, [ip]: false }));
+        }
+    };
+
     return (
         <Card className="col-span-3">
             <CardHeader>
@@ -27,7 +60,23 @@ export function DeviceList({ devices }: { devices: any[] }) {
                                 </div>
                                 <div>
                                     <p className="text-sm font-medium leading-none">{device.Name || 'Unknown Device'}</p>
-                                    <p className="text-xs text-muted-foreground">{device.IP}</p>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <p className="text-xs text-muted-foreground">{device.IP}</p>
+                                        {device.IP && device.IP !== '0.0.0.0' && (
+                                            <div className="flex items-center text-xs text-muted-foreground bg-secondary/50 px-1.5 py-0.5 rounded-md">
+                                                <Activity className="h-3 w-3 mr-1" />
+                                                {loadingPings[device.IP] ? (
+                                                    <span className="animate-pulse">...</span>
+                                                ) : pings[device.IP] !== undefined && pings[device.IP] !== null ? (
+                                                    <span className={pings[device.IP]! < 10 ? "text-green-500 font-medium" : pings[device.IP]! < 50 ? "text-yellow-500" : "text-red-500"}>
+                                                        {pings[device.IP]}ms
+                                                    </span>
+                                                ) : (
+                                                    <span>-</span>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                             <div className="text-right">
